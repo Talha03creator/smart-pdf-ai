@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pdfplumber
+python-multipart
+jinja2
+requests
+python-dotenv
+beautifulsoup4
+duckduckgo-search

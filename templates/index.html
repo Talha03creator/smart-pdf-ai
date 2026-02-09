@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📄 Smart PDF AI Lite</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📄 Smart PDF AI Lite</h1>
+        <p class="subtitle">Powered by StepFun 3.5 Flash API</p>
+
+        <!-- Upload Section -->
+        <div class="section">
+            <h2>📤 Upload PDF</h2>
+            <form action="/upload_pdf" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".pdf" required>
+                <button type="submit" class="btn-primary">Upload PDF</button>
+            </form>
+        </div>
+
+        {% if message %}
+        <div class="alert alert-success">{{ message }}</div>
+        {% endif %}
+
+        {% if error %}
+        <div class="alert alert-error">❌ {{ error }}</div>
+        {% endif %}
+
+        {% if pdf_uploaded %}
+        <div class="alert alert-info">📄 Current PDF: <strong>{{ filename }}</strong></div>
+
+        <hr>
+
+        <!-- Ask Question Section -->
+        <div class="section">
+            <h2>❓ Ask a Question</h2>
+            <form action="/ask_question" method="post">
+                <input type="text" name="question" placeholder="Type your question here..." required
+                    class="input-large">
+                <button type="submit" class="btn-primary">Ask</button>
+            </form>
+        </div>
+
+        {% if question %}
+        <div class="result-box">
+            <div class="result-header">
+                <h3>❓ Question:</h3>
+            </div>
+            <p class="question-text">{{ question }}</p>
+
+            <div class="result-header">
+                <h3>✅ Answer:</h3>
+                <button class="copy-btn" onclick="copyToClipboard('answer-text', this)">📋 Copy</button>
+            </div>
+            <div class="answer-text markdown-content" id="answer-text" data-markdown="{{ answer }}"></div>
+        </div>
+        {% endif %}
+
+        <hr>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <form action="/summarize" method="post" style="display: inline-block;">
+                <button type="submit" class="btn-secondary">📝 Summarize PDF</button>
+            </form>
+
+            <form action="/generate_quiz" method="post" style="display: inline-block;">
+                <button type="submit" class="btn-secondary">🎯 Generate Quiz</button>
+            </form>
+        </div>
+
+        {% if summary %}
+        <div class="result-box">
+            <div class="result-header">
+                <h3>📄 Summary:</h3>
+                <button class="copy-btn" onclick="copyToClipboard('summary-text', this)">📋 Copy</button>
+            </div>
+            <div class="summary-text markdown-content" id="summary-text" data-markdown="{{ summary }}"></div>
+        </div>
+        {% endif %}
+
+        {% if quiz %}
+        <div class="result-box">
+            <div class="result-header">
+                <h3>🎯 Quiz Questions:</h3>
+                <button class="copy-btn" onclick="copyToClipboard('quiz-text', this)">📋 Copy</button>
+            </div>
+            <div class="quiz-text markdown-content" id="quiz-text" data-markdown="{{ quiz }}"></div>
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+
+    <footer>
+        <p>Built with FastAPI + StepFun 3.5 Flash | 100% Free & Online</p>
+    </footer>
+
+    <script>
+        // Render Markdown on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Configure marked for safe rendering
+            marked.setOptions({
+                breaks: true,
+                gfm: true
+            });
+
+            // Find all elements with markdown content
+            const markdownElements = document.querySelectorAll('.markdown-content');
+
+            markdownElements.forEach(element => {
+                const markdownText = element.getAttribute('data-markdown');
+                if (markdownText) {
+                    // Parse Markdown to HTML
+                    element.innerHTML = marked.parse(markdownText);
+                }
+            });
+        });
+
+        function copyToClipboard(elementId, button) {
+            const element = document.getElementById(elementId);
+            const text = element.innerText || element.textContent;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅ Copied!';
+                button.style.background = '#28a745';
+
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                button.innerHTML = '❌ Failed';
+                setTimeout(() => {
+                    button.innerHTML = '📋 Copy';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>
