@@ -185,6 +185,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Talha - [@Talha03creator](https://github.com/Talha03creator)
 
+LinkedIn Profile: https://www.linkedin.com/in/muhammad-talha-6278463a1
+
 Project Link: [https://github.com/Talha03creator/smart-pdf-ai](https://github.com/Talha03creator/smart-pdf-ai)
 
 ---
